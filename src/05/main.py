@@ -123,8 +123,8 @@ class Point:
 
 data: list[tuple[Point,Point]] =[]
 with fileinput.input(files=(f"input.txt",), encoding="utf-8") as f:
-    for i, line in enumerate(test.split("\n")):
-    # for i, line in enumerate(f):
+    # for i, line in enumerate(test.split("\n")):
+    for i, line in enumerate(f):
         line = line.strip()
         if line:
             x, y = tuple(line.split(' -> '))
@@ -155,22 +155,23 @@ table = new_table(0, width=max_x+1, height=max_y+1)
 for v in data:
     start, end =v
 
-    if start.x == end.x:
-        # print(start.x, '| ',start.y, end.y)
-        for col in range(min(start.y, end.y),max(start.y, end.y) +1 ):
-            table[col][start.x] += 1
-        continue
-    if start.y == end.y:
-        # print(start.x, end.x,  '--', start.y)
-        for row in range(min(start.x, end.x),max(start.x, end.x) +1 ):
-            table[start.y][row] += 1
-        continue
+    # Part1
+    # if start.x == end.x:
+    #     print(start.x, '| ',start.y, end.y)
+        # for col in range(min(start.y, end.y),max(start.y, end.y) +1 ):
+        #     table[col][start.x] += 1
+        # continue
+    # if start.y == end.y:
+    #     print(start.x, end.x,  '--', start.y)
+        # for row in range(min(start.x, end.x),max(start.x, end.x) +1 ):
+        #     table[start.y][row] += 1
+        # continue
 
     # Part 2
-    if math.fabs(math.degrees(start.angle(end))) % 45.0 == 0:
+    if True or math.fabs(math.degrees(start.angle(end))) % 45.0 == 0:
     # if start.x == end.y and start.y == end.x:
-        dx = 1 if start.x < end.x else -1
-        dy = 1 if start.y < end.y else -1
+        dx = 0 if start.x == end.x else 1 if start.x < end.x else -1
+        dy = 0 if start.y == end.y else 1 if start.y < end.y else -1
 
         diag = []
         step = start
@@ -180,7 +181,7 @@ for v in data:
         diag.append(end)
         print(diag)
         for p in diag:
-            table[p.x][p.y] += 1
+            table[p.y][p.x] += 1
 
 crit = 0
 for i in range(len(table)):
