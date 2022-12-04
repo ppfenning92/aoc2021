@@ -31,12 +31,36 @@ from utils import Point, DIRS, DIRS_4, DIRS_8  # NOQA
 total = 0
 result = []
 table = new_table(None, width=2, height=4)
-data=[]
-with fileinput.input(files=(f"input.txt",), encoding="utf-8") as f:
-    for i, line in enumerate(f):
-        line = line.strip()
-        if line:
-            # data.append(int(line))
-            data.append({"line": i, "value": int(line)})
+data:[int]=None
+test="""16,1,2,0,4,2,7,1,2,14"""
 
-    print(data)
+with fileinput.input(files=(f"input.txt",), encoding="utf-8") as f:
+    data = parse_nums(f.readline())
+    # for i, line in enumerate(f):
+    #     line = line.strip()
+    #     if line:
+    #         # data.append(int(line))
+    #         data.append({"line": i, "value": int(line)})
+
+print(data)
+
+
+fuel = 999999999
+for i in range(len(data)):
+    # for pos in data:
+    _fuel = sum([math.fabs(pos - i+1) for pos in data])
+    fuel = _fuel if _fuel < fuel else fuel
+
+print(fuel)
+
+
+
+fuel = 99999999999999999999999
+for i in range(len(data)):
+    # for pos in data:
+    dists = [math.fabs(pos - i+1) for pos in data]
+    _fuel = sum([sum(list(range(int(dist)+1))) for dist in dists])
+    fuel = _fuel if _fuel < fuel else fuel
+
+print(fuel)
+
