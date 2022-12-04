@@ -32,11 +32,88 @@ total = 0
 result = []
 table = new_table(None, width=2, height=4)
 data=[]
+test="""5483143223
+2745854711
+5264556173
+6141336146
+6357385478
+4167524645
+2176841721
+6882881134
+4846848554
+5283751526"""
+
+# test = """11111
+# 19991
+# 19191
+# 19991
+# 11111"""
 with fileinput.input(files=(f"input.txt",), encoding="utf-8") as f:
-    for i, line in enumerate(f):
+    # for _, line in enumerate(test.split('\n')):
+    for _, line in enumerate(f):
         line = line.strip()
         if line:
-            # data.append(int(line))
-            data.append({"line": i, "value": int(line)})
+            data.append([int(x) for x in list(line)])
 
     print(data)
+
+
+def check_index(i, j):
+    return 0 <= i < len(data) and 0 <= j < len(data[i])
+def get_adjacent(i, j):
+    top = (i-1,j) if  check_index(i-1,j)  else None
+    top_right = (i-1,j+1) if  check_index(i-1,j+1)  else None
+    right = (i,j+1) if  check_index(i,j+1)  else None
+    bottom_right = (i+1,j+1) if  check_index(i+1,j+1)  else None
+    bottom = (i+1,j) if  check_index(i+1,j)  else None
+    bottom_left = (i+1,j-1) if  check_index(i+1,j-1)  else None
+    left = (i,j-1) if  check_index(i,j-1)  else None
+    top_left = (i-1,j-1) if  check_index(i-1,j-1)  else None
+
+    return top, top_right, right, bottom_right, bottom, bottom_left, left, top_left
+
+print(get_adjacent(1,1))
+
+
+flashes = 0
+flashed = set()
+def flash(i,j):
+    global flashes
+    if (i, j) not in flashed:
+        flashes += 1
+        flashed.add((i,j))
+
+        adj = [tup for tup in get_adjacent(i,j) if tup]
+        for r,c in [tup for tup in adj if tup]:
+            data[r][c] += 1
+            if data[r][c] > 9:
+                flash(r, c)
+
+
+for day in range(100000):
+    flashed = set()
+
+    for row in range(len(data)):
+        for col in range(len(data[row])):
+            data[row][col] += 1
+
+    for row in range(len(data)):
+        for col in range(len(data[row])):
+
+            if data[row][col] > 9:
+                flash(row,col)
+
+
+
+
+    for row,col in flashed:
+        data[row][col] = 0
+
+    if len(flashed) == len(data) * len(data[0]):
+        print('all', day +1)
+        break
+
+
+
+print(flashes)
+

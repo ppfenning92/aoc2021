@@ -32,11 +32,144 @@ total = 0
 result = []
 table = new_table(None, width=2, height=4)
 data=[]
+
+test = """[({(<(())[]>[[{[]{<()<>>
+[(()[<>])]({[<{<<[]>>(
+{([(<{}[<>[]}>{[]{[(<()>
+(((({<>}<{<{<>}{[]{[]{}
+[[<[([]))<([[{}[[()]]]
+[{[{({}]{}}([{[{{{}}([]
+{<[[]]>}<{[{[{[]{()[[[]
+[<(<(<(<{}))><([]([]()
+<{([([[(<>()){}]>(<<{{
+<{([{{}}[<[[[<>{}]]]>[]]"""
+
 with fileinput.input(files=(f"input.txt",), encoding="utf-8") as f:
+    # for i, line in enumerate(test.split('\n')):
     for i, line in enumerate(f):
         line = line.strip()
         if line:
             # data.append(int(line))
-            data.append({"line": i, "value": int(line)})
+            data.append(list(line))
 
     print(data)
+
+points = {
+    ")": 3,
+    "]": 57,
+    "}": 1197,
+    ">": 25137
+}
+
+illegals = []
+unfinished = []
+
+
+parse = {
+    "(": 1,
+    ")": -1,
+    "[": 1,
+    "]": -1,
+    "{": 1,
+    "}": -1,
+    "<": 1,
+    ">": -1
+}
+
+processed_lines = []
+for idx, line in enumerate(data):
+
+    last_open = []
+    for char in line:
+        if char in list("([{<"):
+            last_open.append(char)
+
+        if char == ")":
+            if last_open[-1:][0] != "(":
+                illegals.append(char)
+                processed_lines.append(idx)
+                break
+            else:
+                last_open.pop()
+        if char == "]":
+            if last_open[-1:][0] != "[":
+                illegals.append(char)
+                processed_lines.append(idx)
+                break
+            else:
+                last_open.pop()
+        if char == "}":
+            if last_open[-1:][0] != "{":
+                illegals.append(char)
+                processed_lines.append(idx)
+                break
+            else:
+                last_open.pop()
+        if char == ">":
+            if last_open[-1:][0] != "<":
+                illegals.append(char)
+                processed_lines.append(idx)
+                break
+            else:
+                last_open.pop()
+
+print(illegals)
+print(sum([points[il] for il in illegals]))
+
+
+
+points = {
+    ")": 1,
+    "]": 2,
+    "}": 3,
+    ">": 4
+}
+
+completes = []
+for idx,line in enumerate(data):
+    if idx in processed_lines:
+        continue
+    last_open = []
+    for char in line:
+        if char in list("([{<"):
+            last_open.append(char)
+
+        if char == ")":
+            if last_open[-1:][0] == "(":
+                last_open.pop()
+        if char == "]":
+            if last_open[-1:][0] == "[":
+                last_open.pop()
+        if char == "}":
+            if last_open[-1:][0] == "{":
+                last_open.pop()
+        if char == ">":
+            if last_open[-1:][0] == "<":
+                last_open.pop()
+
+    closing = []
+    for char in last_open[::-1]:
+        if char == '(':
+            closing.append(')')
+        if char == '[':
+            closing.append(']')
+        if char == '{':
+            closing.append('}')
+        if char == '<':
+            closing.append('>')
+
+    completes.append(closing)
+
+totals = []
+for com in completes:
+    sub_total = 0
+    for c in com:
+        sub_total *= 5
+        sub_total += points[c]
+    totals.append(sub_total)
+
+totals.sort()
+print(totals)
+
+print(totals[len(totals)//2])
+
