@@ -1,3 +1,4 @@
+import json
 import re
 from itertools import zip_longest
 
@@ -293,4 +294,7 @@ def transpose(l):
     transposed_tuples = zip_longest(*l, fillvalue=None)
     transposed_tuples_list = list(transposed_tuples)
     return [list(sublist) for sublist in transposed_tuples_list]
+
+def pprint(d: dict):
+    print (json.dumps(d, indent=2, default=str))
 
