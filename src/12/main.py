@@ -86,7 +86,7 @@ def cave_can_be_visited(_path: [Cave], _cave: Cave) -> bool:
     if _cave.id == 'end':
         return True
 
-    small_in_path = [c.id for c in _path if c.small and c.id != 'start' and c.id != 'end']
+    small_in_path = [c.type_id for c in _path if c.small and c.type_id != 'start' and c.type_id != 'end']
     if _cave.id not in small_in_path:
         return True
     counts = Counter(small_in_path)
